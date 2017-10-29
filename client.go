@@ -1,4 +1,4 @@
-package event
+package main
 
 import (
 	"github.com/fsouza/go-dockerclient"

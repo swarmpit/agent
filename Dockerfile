@@ -1,4 +1,5 @@
 FROM scratch
 MAINTAINER Pavol Noha <pavol.noha@gmail.com>
-ADD main /
-CMD ["/main"]
+WORKDIR /
+COPY swarmpit-ec /
+ENTRYPOINT ["./swarmpit-ec"]

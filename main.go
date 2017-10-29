@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"fmt"
-	"swarmpit-ec/event"
 )
 
 func main() {
@@ -21,5 +20,5 @@ func main() {
 		os.Exit(3)
 	}
 
-	event.HandleEvents(dockerEndpoint, eventEndpoint)
+	HandleEvents(dockerEndpoint, eventEndpoint)
 }

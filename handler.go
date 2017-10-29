@@ -1,4 +1,4 @@
-package event
+package main
 
 import (
 	"fmt"
@@ -22,12 +22,13 @@ func HandleEvents(dockerEndpoint string, eventEndpoint string) {
 	err = client.AddEventListener(listener)
 	if err != nil {
 		panic(err)
-		fmt.Fprintf(os.Stdout, "Failed to add event listener: %s", err)
+		fmt.Fprintf(os.Stdout, "Failed to add event listener: %s\n", err)
 	}
 
 	for {
 		msg, ok := <-listener
 		if !ok {
+			fmt.Fprintf(os.Stdout, "Channel closed. Exit!!!\n")
 			break
 		}
 		if msg != nil {
