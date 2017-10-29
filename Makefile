@@ -2,6 +2,6 @@ all: build clean
 build: compile 
 	docker build -t swarmpit/swarmpit-ec .
 compile:
-	GOOS=linux go build .
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 clean:
 	rm -rf swarmpit-ec
