@@ -23,9 +23,12 @@ func SendEvent(endpoint string, eventData docker.APIEvents) {
 	res, err := http.Post(endpoint, "application/json; charset=utf-8", buffer)
 	if err != nil {
 		fmt.Fprintf(os.Stdout, "Event sending failed: %s\n", err)
+	} else {
+		defer res.Body.Close()
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			fmt.Fprintf(os.Stdout, "Event response mallformed: %s\n", err)
+		}
+		fmt.Fprintf(os.Stdout, "Event response: %s\n", body)
 	}
-
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-	fmt.Fprintf(os.Stdout, "Event response: %s\n", body)
 }
