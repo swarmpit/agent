@@ -1,3 +1,3 @@
 # swarmpit-ec
 
-Swarmpit events collector.
+Docker events collector.
