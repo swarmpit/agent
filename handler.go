@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-func HandleEvents(dockerEndpoint string, eventEndpoint string) {
-	client, err := docker.NewClient(dockerEndpoint)
+func HandleEvents(dockerSocket string, eventEndpoint string) {
+	client, err := docker.NewClient(dockerSocket)
 	if err != nil {
 		panic(err)
 	}
@@ -22,13 +22,13 @@ func HandleEvents(dockerEndpoint string, eventEndpoint string) {
 	err = client.AddEventListener(listener)
 	if err != nil {
 		panic(err)
-		fmt.Fprintf(os.Stdout, "Failed to add event listener: %s\n", err)
+		fmt.Fprintf(os.Stdout, "Event listener registration failed: %s\n", err)
 	}
 
 	for {
 		msg, ok := <-listener
 		if !ok {
-			fmt.Fprintf(os.Stdout, "Channel closed. Exit!!!\n")
+			fmt.Fprintf(os.Stdout, "Event channel closed.\n")
 			break
 		}
 		if msg != nil {

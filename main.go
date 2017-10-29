@@ -6,19 +6,19 @@ import (
 )
 
 func main() {
-	var dockerEndpoint, eventEndpoint string
-	dockerEndpoint = os.Getenv("DOCKER_ENDPOINT")
+	var dockerSocket, eventEndpoint string
+	dockerSocket = os.Getenv("DOCKER_SOCKET")
 	eventEndpoint = os.Getenv("EVENT_ENDPOINT")
 
-	if dockerEndpoint == "" {
-		dockerEndpoint = "unix:///var/run/docker.sock"
-		fmt.Fprintf(os.Stdout, "DOCKER_ENDPOINT not defined. Used default: %s\n", dockerEndpoint)
-	}
-
-	if eventEndpoint == "" {
-		fmt.Fprintf(os.Stdout, "EVENT_ENDPOINT not defined. Please specify correct url!!!\n")
+	if dockerSocket == "" {
+		fmt.Fprintf(os.Stderr, "Please specify correct DOCKER_SOCKET property.\n")
 		os.Exit(3)
 	}
 
-	HandleEvents(dockerEndpoint, eventEndpoint)
+	if eventEndpoint == "" {
+		fmt.Fprintf(os.Stderr, "Please specify correct EVENT_ENDPOINT property.\n")
+		os.Exit(3)
+	}
+
+	HandleEvents(dockerSocket, eventEndpoint)
 }
