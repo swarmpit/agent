@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/fsouza/go-dockerclient"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -11,12 +10,12 @@ import (
 )
 
 type Event struct {
-	Type string
-	Data docker.APIEvents
+	From    string
+	Message interface{}
 }
 
-func SendEvent(endpoint string, eventData docker.APIEvents) {
-	event := Event{Type: "DOCKER_EVENT", Data: eventData}
+func SendEvent(endpoint string, message interface{}) {
+	event := Event{From: "DOCKER", Message: message}
 	buffer := new(bytes.Buffer)
 	json.NewEncoder(buffer).Encode(event)
 
