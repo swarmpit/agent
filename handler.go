@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"context"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types"
-	"os"
 	"io"
 )
 
@@ -22,12 +20,12 @@ loop:
 		select {
 		case err := <-errs:
 			if err != nil && err != io.EOF {
-				fmt.Fprintf(os.Stdout, "Event channel error: %s\n", err)
+				logPrintf("ERROR: Event channel error: %s", err)
 			}
 			break loop
 		case msg, ok := <-messages:
 			if !ok {
-				fmt.Fprintf(os.Stdout, "Event channel closed.\n")
+				logPrintf("ERROR: Event channel closed.")
 				break loop
 			}
 			SendEvent(eventEndpoint, msg)

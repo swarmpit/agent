@@ -1,18 +1,8 @@
 package main
 
-import (
-	"os"
-	"fmt"
-)
-
 func main() {
-	var eventEndpoint string
-	eventEndpoint = os.Getenv("EVENT_ENDPOINT")
-
-	if eventEndpoint == "" {
-		fmt.Fprintf(os.Stderr, "Please specify correct EVENT_ENDPOINT property.\n")
-		os.Exit(3)
-	}
-
-	HandleEvents(eventEndpoint)
+	args := getArgs()
+	logPrintf("INFO: Event collector starting...")
+	logPrintf("INFO: EVENT_ENDPOINT: %s", args.EventEndpoint)
+	HandleEvents(args.EventEndpoint)
 }
