@@ -7,8 +7,8 @@ cache:
 go:
  - 1.9.2
 before_install:
-  - go get https://github.com/docker/docker/api/types
-  - go get https://github.com/docker/docker/client
+  - go get github.com/docker/docker/api/types
+  - go get github.com/docker/docker/client
 script:
   - make
 after_success:
