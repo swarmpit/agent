@@ -1,9 +1,9 @@
 language: go
 services:
   - docker
-#cache:
-#  directories:
-#    - ~/docker
+cache:
+  directories:
+    - ~/docker
 go:
   - 1.9.2
 before_install:
