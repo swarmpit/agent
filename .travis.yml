@@ -9,6 +9,7 @@ go:
 before_install:
   - go get github.com/docker/docker/api/types
   - go get github.com/docker/docker/client
+  - go get github.com/gorilla/mux
 script:
   - make
 after_success:
