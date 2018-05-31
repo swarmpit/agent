@@ -5,9 +5,13 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types"
 	"io"
+	"net/http"
+	"encoding/json"
+	"time"
 )
 
 func HandleEvents(eventEndpoint string) {
+	fallbackAttempts := 5
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		panic(err)
@@ -29,6 +33,20 @@ loop:
 				break loop
 			}
 			SendEvent(eventEndpoint, msg)
+			fallbackAttempts = 5
 		}
 	}
+
+	if fallbackAttempts > 0 {
+		fallbackAttempts -= 1
+		time.Sleep(2 * time.Second)
+		goto loop
+	} else {
+		panic("Event collector is broken. Shutdown!!!")
+	}
+}
+
+func Info(w http.ResponseWriter, r *http.Request) {
+	args := getArgs()
+	json.NewEncoder(w).Encode(args)
 }
