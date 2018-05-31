@@ -1,11 +1,20 @@
 package main
 
+import (
+	"log"
+	"net/http"
+	"os"
+)
+
 func main() {
+	port := os.Getenv("PORT")
+	router := NewRouter()
 	args := getArgs()
-	logPrintf("INFO: Swarmpit event collector starting...")
-	logPrintf("INFO: EVENT_ENDPOINT: %s", args.EventEndpoint)
-	logPrintf("INFO: HEALTH_CHECK_ENDPOINT: %s", args.HealthCheckEndpoint)
 	logPrintf("INFO: Waiting for Swarmpit...")
 	HealthCheck(args.HealthCheckEndpoint)
-	HandleEvents(args.EventEndpoint)
+	logPrintf("INFO: Swarmpit event collector starting...")
+	go HandleEvents(args.EventEndpoint)
+	logPrintf("INFO: Swarmpit event collector running")
+	logPrintf("INFO: Swarmpit agent listening on port: %s", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
