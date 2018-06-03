@@ -14,6 +14,7 @@ import (
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/swarmpit/agent/setup"
+	"github.com/swarmpit/agent/swarmpit"
 )
 
 var arg = setup.GetArgs()
@@ -178,7 +179,7 @@ func HandleStats(cli *client.Client) {
 		var tasks = ContainersUsage(cli)
 
 		status := Status{Disk: disk, Cpu: cpu, Memory: memory, Tasks: tasks}
-		log.Print(status)
+		swarmpit.SendEvent("stats", status)
 	}
 }
 

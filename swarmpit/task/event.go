@@ -25,7 +25,7 @@ loop:
 				log.Printf("ERROR: Event channel closed.")
 				break loop
 			}
-			swarmpit.SendEvent(msg)
+			swarmpit.SendEvent("event", msg)
 		}
 	}
 	panic("Event collector is broken. Shutdown!!!")
