@@ -3,18 +3,27 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
+	"github.com/docker/docker/client"
+	"./swarmpit"
+	"./swarmpit/task"
+	"./setup"
 )
 
+var arg = setup.GetArgs()
+
 func main() {
-	port := os.Getenv("PORT")
 	router := NewRouter()
-	args := getArgs()
-	logPrintf("INFO: Waiting for Swarmpit...")
-	HealthCheck(args.HealthCheckEndpoint)
-	logPrintf("INFO: Swarmpit event collector starting...")
-	go HandleEvents(args.EventEndpoint)
-	logPrintf("INFO: Swarmpit event collector running")
-	logPrintf("INFO: Swarmpit agent listening on port: %s", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		log.Printf("ERROR: Docker client initialization failed.")
+		panic(err)
+	}
+	log.Printf("INFO: Waiting for Swarmpit...")
+	swarmpit.HealthCheck()
+	go task.HandleEvents(cli)
+	log.Printf("INFO: Event collector started.")
+	go task.HandleStats(cli)
+	log.Printf("INFO: Stats collector started.")
+	log.Printf("INFO: Swarmpit agent listening on port: %s", arg.AgentPort)
+	log.Fatal(http.ListenAndServe(":"+arg.AgentPort, router))
 }
