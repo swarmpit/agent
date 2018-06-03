@@ -10,6 +10,9 @@ before_install:
   - go get github.com/docker/docker/api/types
   - go get github.com/docker/docker/client
   - go get github.com/gorilla/mux
+  - go get github.com/shirou/gopsutil/mem
+  - go get github.com/shirou/gopsutil/disk
+  - go get github.com/shirou/gopsutil/cpu
 script:
   - make
 after_success:

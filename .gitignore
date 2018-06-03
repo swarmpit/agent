@@ -20,5 +20,5 @@
 .idea
 *.iml
 
-# Ignore event collector binary
-event-collector
+# Ignore agent binary
+agent
