@@ -1,19 +1,19 @@
 package task
 
 import (
+	"io"
+	"log"
+	"time"
+	"sync"
 	"context"
+	"runtime"
+	"encoding/json"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/cpu"
-	"io"
-	"encoding/json"
-	"time"
-	"log"
-	"sync"
-	"runtime"
-	"../../setup"
+	"github.com/swarmpit/agent/setup"
 )
 
 var arg = setup.GetArgs()

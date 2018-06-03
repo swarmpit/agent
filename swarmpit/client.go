@@ -1,12 +1,12 @@
 package swarmpit
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
-	"time"
 	"log"
-	"../setup"
+	"time"
+	"bytes"
+	"net/http"
+	"encoding/json"
+	"github.com/swarmpit/agent/setup"
 )
 
 var arg = setup.GetArgs()

@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 	"github.com/docker/docker/client"
-	"./swarmpit"
-	"./swarmpit/task"
-	"./setup"
+	"github.com/swarmpit/agent/setup"
+	"github.com/swarmpit/agent/swarmpit"
+	"github.com/swarmpit/agent/swarmpit/task"
 )
 
 var arg = setup.GetArgs()

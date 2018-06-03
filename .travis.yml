@@ -13,6 +13,9 @@ before_install:
   - go get github.com/shirou/gopsutil/mem
   - go get github.com/shirou/gopsutil/disk
   - go get github.com/shirou/gopsutil/cpu
+  - go get github.com/swarmpit/agent/setup
+  - go get github.com/swarmpit/agent/swarmpit
+  - go get github.com/swarmpit/agent/swarmpit/task
 script:
   - make
 after_success:
