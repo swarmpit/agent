@@ -186,7 +186,7 @@ func HandleStats(cli *client.Client) {
 		var id = getNodeId(cli)
 
 		status := Status{Id: id, Disk: disk, Cpu: cpu, Memory: memory, Tasks: tasks}
-		swarmpit.SendEvent("stats", status)
+		swarmpit.SendEvent(swarmpit.STATS, status)
 	}
 }
 
