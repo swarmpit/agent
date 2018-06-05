@@ -11,13 +11,20 @@ import (
 
 var arg = setup.GetArgs()
 
+type EventType string
+
+const (
+	EVENT EventType = "event"
+	STATS EventType = "stats"
+)
+
 type Event struct {
-	Typ    string      `json:"type"`
-	Message interface{} `json:"message"`
+	EventType EventType   `json:"type"`
+	Message   interface{} `json:"message"`
 }
 
-func SendEvent(typ string, message interface{}) {
-	event := Event{Typ: typ, Message: message}
+func SendEvent(eventType EventType, message interface{}) {
+	event := Event{EventType: eventType, Message: message}
 	buffer := new(bytes.Buffer)
 	json.NewEncoder(buffer).Encode(event)
 
