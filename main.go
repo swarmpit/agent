@@ -25,5 +25,5 @@ func main() {
 	go task.HandleStats(cli)
 	log.Printf("INFO: Stats collector started.")
 	log.Printf("INFO: Swarmpit agent listening on port: %s", arg.AgentPort)
-	log.Fatal(http.ListenAndServe(":"+arg.AgentPort, router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

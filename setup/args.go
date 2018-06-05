@@ -6,7 +6,6 @@ import (
 )
 
 type args struct {
-	AgentPort           string `json:"agent_port"`
 	StatsFrequency      int    `json:"stats_frequency"`
 	EventEndpoint       string `json:"event_endpoint"`
 	HealthCheckEndpoint string `json:"healthcheck_endpoint"`
@@ -14,7 +13,6 @@ type args struct {
 
 func GetArgs() *args {
 	return &args{
-		AgentPort:           getStringValue("8080", "PORT"),
 		StatsFrequency:      getIntValue(30, "STATS_FREQUENCY"),
 		EventEndpoint:       getStringValue("http://app:8080/events", "EVENT_ENDPOINT"),
 		HealthCheckEndpoint: getStringValue("http://app:8080/version", "HEALTH_CHECK_ENDPOINT"),
