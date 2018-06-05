@@ -20,6 +20,7 @@ import (
 var arg = setup.GetArgs()
 
 type Status struct {
+	Id     string            `json:"id"`
 	Disk   DiskStatus        `json:"disk"`
 	Cpu    CpuStatus         `json:"cpu"`
 	Memory MemoryStatus      `json:"memory"`
@@ -59,6 +60,11 @@ func getPath() string {
 		return "\\"
 	}
 	return "/"
+}
+
+func getNodeId(cli *client.Client) string {
+	resp, _ := cli.Info(context.Background())
+	return resp.Swarm.NodeID
 }
 
 func DiskUsage() (ds DiskStatus) {
@@ -177,8 +183,9 @@ func HandleStats(cli *client.Client) {
 		var disk = DiskUsage()
 		var cpu = CpuUsage()
 		var tasks = ContainersUsage(cli)
+		var id = getNodeId(cli)
 
-		status := Status{Disk: disk, Cpu: cpu, Memory: memory, Tasks: tasks}
+		status := Status{Id: id, Disk: disk, Cpu: cpu, Memory: memory, Tasks: tasks}
 		swarmpit.SendEvent("stats", status)
 	}
 }
