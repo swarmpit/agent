@@ -4,12 +4,9 @@ import (
 	"log"
 	"net/http"
 	"github.com/docker/docker/client"
-	"github.com/swarmpit/agent/setup"
 	"github.com/swarmpit/agent/swarmpit"
 	"github.com/swarmpit/agent/swarmpit/task"
 )
-
-var arg = setup.GetArgs()
 
 func main() {
 	router := NewRouter()
@@ -24,6 +21,6 @@ func main() {
 	log.Printf("INFO: Event collector started.")
 	go task.HandleStats(cli)
 	log.Printf("INFO: Stats collector started.")
-	log.Printf("INFO: Swarmpit agent listening on port: %s", arg.AgentPort)
+	log.Printf("INFO: Swarmpit agent listening on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
