@@ -121,14 +121,15 @@ func ContainersUsage(cli *client.Client) (stats []ContainerStatus) {
 	mux := &sync.Mutex{}
 
 	for _, v := range resp {
-		go func() {
+		go func(v types.Container) {
 			defer wg.Done()
 			var stat = ContainerUsage(cli, v.ID);
 			mux.Lock()
 			stats = append(stats, stat)
 			mux.Unlock()
-		}()
+		}(v)
 	}
+
 	wg.Wait()
 	return
 }
