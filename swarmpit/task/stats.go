@@ -28,10 +28,10 @@ type Status struct {
 }
 
 type DiskStatus struct {
-	Total          float64 `json:"total"`
-	Used           float64 `json:"used"`
+	Total          uint64  `json:"total"`
+	Used           uint64  `json:"used"`
 	UsedPercentage float64 `json:"usedPercentage"`
-	Free           float64 `json:"free"`
+	Free           uint64  `json:"free"`
 }
 
 type CpuStatus struct {
@@ -39,10 +39,10 @@ type CpuStatus struct {
 }
 
 type MemoryStatus struct {
-	Total          float64 `json:"total"`
-	Used           float64 `json:"used"`
+	Total          uint64  `json:"total"`
+	Used           uint64  `json:"used"`
 	UsedPercentage float64 `json:"usedPercentage"`
-	Free           float64 `json:"free"`
+	Free           uint64  `json:"free"`
 }
 
 type ContainerStatus struct {
@@ -73,9 +73,9 @@ func DiskUsage() (ds DiskStatus) {
 		return
 	}
 
-	ds.Total = float64(diskStat.Total)
-	ds.Free = float64(diskStat.Free)
-	ds.Used = float64(diskStat.Used)
+	ds.Total = diskStat.Total
+	ds.Free = diskStat.Free
+	ds.Used = diskStat.Used
 	ds.UsedPercentage = diskStat.UsedPercent
 	return
 }
@@ -102,9 +102,9 @@ func MemoryUsage() (ms MemoryStatus) {
 		return
 	}
 
-	ms.Total = float64(vmStat.Total)
-	ms.Free = float64(vmStat.Free)
-	ms.Used = float64(vmStat.Used)
+	ms.Total = vmStat.Total
+	ms.Free = vmStat.Free
+	ms.Used = vmStat.Used
 	ms.UsedPercentage = vmStat.UsedPercent
 	return
 }
