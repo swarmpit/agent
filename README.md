@@ -17,7 +17,7 @@ docker run -d \
 - EVENT_ENDPOINT - default to **app**
 - HEALTH_CHECK_ENDPOINT - default to **app**
 
-### Important!
+## Important!
 
 In case you are deploying agent inside Swarmpit [stack](https://github.com/swarmpit/swarmpit/blob/master/docker-compose.yml)
 with some sort of customization, make sure that Swarmpit service name (default to **app**) match domain name set by EVENT_ENDPOINT & HEALTH_CHECK_ENDPOINT. 
