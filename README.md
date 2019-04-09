@@ -14,8 +14,8 @@ docker run -d \
 ### Parameters
 
 - STATS_FREQUENCY - default to **30**
-- EVENT_ENDPOINT - default to **app**
-- HEALTH_CHECK_ENDPOINT - default to **app**
+- EVENT_ENDPOINT - default to **http://app:8080/events**
+- HEALTH_CHECK_ENDPOINT - default to **http://app:8080/version**
 
 ## Important!
 
