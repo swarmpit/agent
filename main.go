@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	router := NewRouter()
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		log.Printf("ERROR: Docker client initialization failed.")
@@ -17,10 +16,13 @@ func main() {
 	}
 	log.Printf("INFO: Waiting for Swarmpit...")
 	swarmpit.HealthCheck()
+
 	go task.HandleEvents(cli)
 	log.Printf("INFO: Event collector started.")
 	go task.HandleStats(cli)
 	log.Printf("INFO: Stats collector started.")
-	log.Printf("INFO: Swarmpit agent listening on port 8080")
+
+	router := NewRouter(cli)
 	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Printf("INFO: Swarmpit agent listening on port 8080")
 }
