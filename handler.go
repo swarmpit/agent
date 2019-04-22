@@ -38,7 +38,7 @@ func Logs(cli *client.Client) http.HandlerFunc {
 
 		if err != nil {
 			log.Printf("ERROR: Cannot obtain container logs: %s\n", err)
-			http.Error(w, err.Error(), 400)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -46,7 +46,7 @@ func Logs(cli *client.Client) http.HandlerFunc {
 		content, err := ioutil.ReadAll(resp)
 		if err != nil {
 			log.Printf("ERROR: Cannot read container logs: %s\n", err)
-			http.Error(w, err.Error(), 500)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		json.NewEncoder(w).Encode(string(content))
