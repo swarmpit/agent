@@ -2,6 +2,9 @@
 
 Swarmpit docker agent.
 
+[![version](https://img.shields.io/github/release-pre/swarmpit/swarmpit.svg)](https://github.com/swarmpit/agent/releases) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/swarmpit/agent/pulls)
+
 ## Run
 
 ```{r, engine='bash', count_lines}
