@@ -2,8 +2,7 @@
 
 Swarmpit docker agent.
 
-[![version](https://img.shields.io/github/release-pre/swarmpit/agent.svg)](https://github.com/swarmpit/agent/releases) 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/swarmpit/agent/pulls)
+Fork for multi arch build.
 
 ## Run
 
