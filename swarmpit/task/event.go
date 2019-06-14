@@ -6,7 +6,7 @@ import (
 	"context"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types"
-	"github.com/swarmpit/agent/swarmpit"
+	"github.com/Kenits/agent/swarmpit"
 )
 
 func HandleEvents(cli *client.Client) {
