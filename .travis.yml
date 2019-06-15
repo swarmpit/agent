@@ -1,11 +1,9 @@
-language: go
+language: go "1.12"
 services:
   - docker
 cache:
   directories:
     - ~/docker
-go:
-  - 1.12.6
 
 script:
   - GOOS=linux GOARCH=amd64 go build .
