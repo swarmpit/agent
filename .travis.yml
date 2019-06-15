@@ -11,11 +11,11 @@ script:
   - rm -f agent
 
   - GOOS=linux GOARCH=arm64  go build .
-  - docker build -t kenits/swarmpit_agent:$edge-linux-arm64v8 .
+  - docker build -t kenits/swarmpit_agent:edge-linux-arm64v8 .
   - rm -f agent
 
   - GOOS=linux GOARCH=arm GOARM=7  go build .
-  - docker build -t kenits/swarmpit_agent:$edge-linux-arm32v7 .
+  - docker build -t kenits/swarmpit_agent:edge-linux-arm32v7 .
   - rm -f agent
 
 after_success:
