@@ -1,0 +1,23 @@
+language: go "1.12"
+services:
+  - docker
+cache:
+  directories:
+    - ~/docker
+
+script:
+  - GOOS=linux GOARCH=amd64 go build .
+  - docker build -t kenits/swarmpit_agent:${TRAVIS_COMMIT}-linux-amd64
+  - rm -f agent
+
+  - GOOS=linux GOARCH=arm64  go build .
+  - docker build -t kenits/swarmpit_agent:${TRAVIS_COMMIT}-linux-arm64v8
+  - rm -f agent
+
+  - GOOS=linux GOARCH=arm GOARM=7  go build .
+  - docker build -t kenits/swarmpit_agent:${TRAVIS_COMMIT}-linux-arm32v7
+  - rm -f agent
+
+after_success:
+  - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+  - docker push kenits/swarmpit_agent
