@@ -1,5 +1,5 @@
 FROM scratch
-MAINTAINER Pavol Noha <pavol.noha@gmail.com>
+LABEL maintainer="deimos.kenit@gmail.com"
 EXPOSE 8080
 WORKDIR /
 COPY agent /

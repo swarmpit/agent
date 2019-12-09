@@ -4,20 +4,20 @@ services:
 cache:
   directories:
     - ~/docker
-go:
-  - 1.9.2
-before_install:
-  - go get github.com/docker/docker/api/types
-  - go get github.com/docker/docker/client
-  - go get github.com/gorilla/mux
-  - go get github.com/shirou/gopsutil/mem
-  - go get github.com/shirou/gopsutil/disk
-  - go get github.com/shirou/gopsutil/cpu
-  - go get github.com/swarmpit/agent/setup
-  - go get github.com/swarmpit/agent/swarmpit
-  - go get github.com/swarmpit/agent/swarmpit/task
+
 script:
-  - make
+  - GOOS=linux GOARCH=amd64 go build .
+  - docker build -t kenits/swarmpit_agent:edge-linux-amd64 .
+  - rm -f agent
+
+  - GOOS=linux GOARCH=arm64  go build .
+  - docker build -t kenits/swarmpit_agent:edge-linux-arm64v8 .
+  - rm -f agent
+
+  - GOOS=linux GOARCH=arm GOARM=7  go build .
+  - docker build -t kenits/swarmpit_agent:edge-linux-arm32v7 .
+  - rm -f agent
+
 after_success:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker push swarmpit/agent
+  - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+  - docker push kenits/swarmpit_agent
