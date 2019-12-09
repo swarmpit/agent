@@ -17,3 +17,4 @@ after_success:
   - docker manifest annotate --os linux --arch arm --variant v7 swarmpit/agent:latest swarmpit/agent:armv7
   - docker manifest annotate --os linux --arch arm --variant v6 swarmpit/agent:latest swarmpit/agent:armv6
   - docker manifest push swarmpit/agent:latest
+  - docker run --rm -it lumir/remove-dockerhub-tag --user "${DOCKER_USERNAME}" --password "${DOCKER_PASSWORD}" swarmpit/agent:amd64 swarmpit/agent:arm64 swarmpit/agent:armv7 swarmpit/agent:armv6
