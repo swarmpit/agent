@@ -1,5 +1,6 @@
-language: go
+language: minimal
 services:
   - docker
 script:
+  - mkdir $HOME/.docker && touch $HOME/.docker/config.json && chmod 777 $HOME/.docker/config.json && echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
   - bash deploy-image.sh
