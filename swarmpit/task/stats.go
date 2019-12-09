@@ -1,20 +1,21 @@
 package task
 
 import (
+	"context"
+	"encoding/json"
 	"io"
 	"log"
-	"time"
-	"sync"
-	"context"
 	"runtime"
-	"encoding/json"
-	"github.com/docker/docker/client"
+	"sync"
+	"time"
+
+	"github.com/Kenits/agent/setup"
+	"github.com/Kenits/agent/swarmpit"
 	"github.com/docker/docker/api/types"
-	"github.com/shirou/gopsutil/mem"
-	"github.com/shirou/gopsutil/disk"
+	"github.com/docker/docker/client"
 	"github.com/shirou/gopsutil/cpu"
-	"github.com/swarmpit/agent/setup"
-	"github.com/swarmpit/agent/swarmpit"
+	"github.com/shirou/gopsutil/disk"
+	"github.com/shirou/gopsutil/mem"
 )
 
 var arg = setup.GetArgs()
@@ -123,7 +124,7 @@ func ContainersUsage(cli *client.Client) (stats []ContainerStatus) {
 	for _, v := range resp {
 		go func(v types.Container) {
 			defer wg.Done()
-			var stat = ContainerUsage(cli, v.ID);
+			var stat = ContainerUsage(cli, v.ID)
 			mux.Lock()
 			stats = append(stats, stat)
 			mux.Unlock()
@@ -199,12 +200,9 @@ func calculateCPUPercentUnix(previousCPU, previousSystem uint64, v *types.StatsJ
 		cpuPercent  = 0.0
 		cpuDelta    = float64(v.CPUStats.CPUUsage.TotalUsage) - float64(previousCPU)
 		systemDelta = float64(v.CPUStats.SystemUsage) - float64(previousSystem)
-		onlineCPUs  = float64(v.CPUStats.OnlineCPUs)
+		onlineCPUs = float64(len(v.CPUStats.CPUUsage.PercpuUsage))
 	)
 
-	if onlineCPUs == 0.0 {
-		onlineCPUs = float64(len(v.CPUStats.CPUUsage.PercpuUsage))
-	}
 	if systemDelta > 0.0 && cpuDelta > 0.0 {
 		cpuPercent = (cpuDelta / systemDelta) * onlineCPUs * 100.0
 	}

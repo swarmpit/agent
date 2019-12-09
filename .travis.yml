@@ -1,23 +1,18 @@
 language: go
 services:
   - docker
-cache:
-  directories:
-    - ~/docker
-go:
-  - 1.9.2
-before_install:
-  - go get github.com/docker/docker/api/types
-  - go get github.com/docker/docker/client
-  - go get github.com/gorilla/mux
-  - go get github.com/shirou/gopsutil/mem
-  - go get github.com/shirou/gopsutil/disk
-  - go get github.com/shirou/gopsutil/cpu
-  - go get github.com/swarmpit/agent/setup
-  - go get github.com/swarmpit/agent/swarmpit
-  - go get github.com/swarmpit/agent/swarmpit/task
 script:
-  - make
+  - docker build --build-arg GOARCH=amd64 -t swarmpit/agent:amd64 .
+  - docker build --build-arg GOARCH=arm64 -t swarmpit/agent:arm64 .
+  - docker build --build-arg GOARCH=arm --build-arg GOARM=7 -t swarmpit/agent:armv7 .
+  - docker build --build-arg GOARCH=arm --build-arg GOARM=6 -t swarmpit/agent:armv6 .
+
 after_success:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - mkdir $HOME/.docker && touch $HOME/.docker/config.json && chmod 777 $HOME/.docker/config.json && echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+  - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
   - docker push swarmpit/agent
+  - docker manifest create swarmpit/agent:latest swarmpit/agent:amd64 swarmpit/agent:arm64 swarmpit/agent:armv7 swarmpit/agent:armv6
+  - docker manifest annotate --os linux --arch amd64 swarmpit/agent:latest swarmpit/agent:amd64
+  - docker manifest annotate --os linux --arch arm64 swarmpit/agent:latest swarmpit/agent:arm64
+  - docker manifest annotate --os linux --arch arm --variant v7 swarmpit/agent:latest swarmpit/agent:armv7
+  - docker manifest annotate --os linux --arch arm --variant v6 swarmpit/agent:latest swarmpit/agent:armv6
