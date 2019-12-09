@@ -16,3 +16,4 @@ after_success:
   - docker manifest annotate --os linux --arch arm64 swarmpit/agent:latest swarmpit/agent:arm64
   - docker manifest annotate --os linux --arch arm --variant v7 swarmpit/agent:latest swarmpit/agent:armv7
   - docker manifest annotate --os linux --arch arm --variant v6 swarmpit/agent:latest swarmpit/agent:armv6
+  - docker manifest push swarmpit/agent:latest
