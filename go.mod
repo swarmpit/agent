@@ -1,4 +1,4 @@
-module github.com/Kenits/agent
+module github.com/swarmpit/agent
 
 go 1.12
 
