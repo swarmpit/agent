@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"encoding/json"
-	"github.com/Kenits/agent/setup"
+	"github.com/swarmpit/agent/setup"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/api/types"
 	"github.com/gorilla/mux"

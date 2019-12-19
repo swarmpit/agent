@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"net/http"
 	"encoding/json"
-	"github.com/Kenits/agent/setup"
+	"github.com/swarmpit/agent/setup"
 )
 
 var arg = setup.GetArgs()

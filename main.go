@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 	"github.com/docker/docker/client"
-	"github.com/Kenits/agent/swarmpit"
-	"github.com/Kenits/agent/swarmpit/task"
+	"github.com/swarmpit/agent/swarmpit"
+	"github.com/swarmpit/agent/swarmpit/task"
 )
 
 func main() {

@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Kenits/agent/setup"
-	"github.com/Kenits/agent/swarmpit"
+	"github.com/swarmpit/agent/setup"
+	"github.com/swarmpit/agent/swarmpit"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/shirou/gopsutil/cpu"
@@ -200,8 +200,12 @@ func calculateCPUPercentUnix(previousCPU, previousSystem uint64, v *types.StatsJ
 		cpuPercent  = 0.0
 		cpuDelta    = float64(v.CPUStats.CPUUsage.TotalUsage) - float64(previousCPU)
 		systemDelta = float64(v.CPUStats.SystemUsage) - float64(previousSystem)
-		onlineCPUs = float64(len(v.CPUStats.CPUUsage.PercpuUsage))
+		onlineCPUs  = float64(v.CPUStats.OnlineCPUs)
 	)
+
+	if onlineCPUs == 0.0 {
+		onlineCPUs = float64(len(v.CPUStats.CPUUsage.PercpuUsage))
+	}
 
 	if systemDelta > 0.0 && cpuDelta > 0.0 {
 		cpuPercent = (cpuDelta / systemDelta) * onlineCPUs * 100.0
