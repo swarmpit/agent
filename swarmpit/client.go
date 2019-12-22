@@ -16,6 +16,8 @@ type EventType string
 const (
 	EVENT EventType = "event"
 	STATS EventType = "stats"
+	EMPTY           = ""
+	TAB             = "\t"
 )
 
 type Event struct {
@@ -26,7 +28,17 @@ type Event struct {
 func SendEvent(eventType EventType, message interface{}) {
 	event := Event{EventType: eventType, Message: message}
 	buffer := new(bytes.Buffer)
-	json.NewEncoder(buffer).Encode(event)
+	encoder := json.NewEncoder(buffer)
+	encoder.SetIndent(EMPTY, TAB)
+	encoder.Encode(event)
+
+	if eventType == STATS && arg.Debug.Stats == true {
+		log.Printf("DEBUG: Host stats: %s", buffer)
+	}
+
+	if eventType == EVENT && arg.Debug.Event == true {
+		log.Printf("DEBUG: Docker event: %s", buffer)
+	}
 
 	_, err := http.Post(arg.EventEndpoint, "application/json; charset=utf-8", buffer)
 	if err != nil {
