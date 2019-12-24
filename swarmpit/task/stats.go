@@ -37,6 +37,7 @@ type DiskStatus struct {
 
 type CpuStatus struct {
 	UsedPercentage float64 `json:"usedPercentage"`
+	Cores          int     `json:"cores"`
 }
 
 type MemoryStatus struct {
@@ -63,11 +64,6 @@ func getPath() string {
 	return "/"
 }
 
-func getNodeId(cli *client.Client) string {
-	resp, _ := cli.Info(context.Background())
-	return resp.Swarm.NodeID
-}
-
 func DiskUsage() (ds DiskStatus) {
 	diskStat, err := disk.Usage(getPath())
 	if err != nil {
@@ -81,7 +77,7 @@ func DiskUsage() (ds DiskStatus) {
 	return
 }
 
-func CpuUsage() (cs CpuStatus) {
+func CpuUsage(cpuCores int) (cs CpuStatus) {
 	percentage, err := cpu.Percent(0, true)
 	if err != nil {
 		return
@@ -94,6 +90,7 @@ func CpuUsage() (cs CpuStatus) {
 
 	cpuPercentage = cpuPercentAll / (float64(len(percentage)))
 	cs.UsedPercentage = cpuPercentage
+	cs.Cores = cpuCores
 	return
 }
 
@@ -180,12 +177,13 @@ func ContainerUsage(cli *client.Client, id string) (status ContainerStatus) {
 func HandleStats(cli *client.Client) {
 	for {
 		<-time.After(time.Duration(arg.StatsFrequency) * time.Second)
+		resp, _ := cli.Info(context.Background())
 
+		var id = resp.Swarm.NodeID
 		var memory = MemoryUsage()
 		var disk = DiskUsage()
-		var cpu = CpuUsage()
+		var cpu = CpuUsage(resp.NCPU)
 		var tasks = ContainersUsage(cli)
-		var id = getNodeId(cli)
 
 		status := Status{Id: id, Disk: disk, Cpu: cpu, Memory: memory, Tasks: tasks}
 		swarmpit.SendEvent(swarmpit.STATS, status)
