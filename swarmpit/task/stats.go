@@ -3,7 +3,6 @@ package task
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"log"
 	"runtime"
 	"sync"
@@ -149,7 +148,14 @@ func ContainerUsage(cli *client.Client, id string) (status ContainerStatus) {
 	defer resp.Body.Close()
 	dec := json.NewDecoder(resp.Body)
 	if err := dec.Decode(&v); err != nil {
-		dec = json.NewDecoder(io.MultiReader(dec.Buffered(), resp.Body))
+		log.Printf("ERROR: Failed to decode container stats for %s: %s\n", id, err)
+		return
+	}
+
+	// Add nil check to prevent panic
+	if v == nil {
+		log.Printf("ERROR: Container stats data is nil for container %s\n", id)
+		return
 	}
 
 	var daemonOSType = resp.OSType
