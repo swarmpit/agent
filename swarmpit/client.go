@@ -1,9 +1,11 @@
 package swarmpit
 
 import (
+	"io"
 	"log"
 	"time"
 	"bytes"
+	"io/ioutil"
 	"net/http"
 	"encoding/json"
 	"github.com/swarmpit/agent/setup"
@@ -40,18 +42,27 @@ func SendEvent(eventType EventType, message interface{}) {
 		log.Printf("DEBUG: Docker event: %s", buffer)
 	}
 
-	_, err := http.Post(arg.EventEndpoint, "application/json; charset=utf-8", buffer)
+	resp, err := http.Post(arg.EventEndpoint, "application/json; charset=utf-8", buffer)
 	if err != nil {
 		log.Printf("ERROR: Event sending failed: %s", err)
+		return
 	}
+	// Drain and close the body so the underlying keep-alive connection is
+	// reused/released. Without this every POST leaks a connection + file
+	// descriptor (SendEvent runs on every stats tick), eventually exhausting
+	// the agent's FD limit ("too many open files") and growing memory until OOM.
+	io.Copy(ioutil.Discard, resp.Body)
+	resp.Body.Close()
 }
 
 func HealthCheck() {
 	for {
 		<-time.After(5 * time.Second)
-		_, err := http.Get(arg.HealthCheckEndpoint)
+		resp, err := http.Get(arg.HealthCheckEndpoint)
 
 		if err == nil {
+			io.Copy(ioutil.Discard, resp.Body)
+			resp.Body.Close()
 			log.Printf("INFO: Swarmpit OK")
 			break;
 		}
