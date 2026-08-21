@@ -19,6 +19,7 @@ docker run -d \
 - STATS_FREQUENCY - default to **30**
 - EVENT_ENDPOINT - default to **http://app:8080/events**
 - HEALTH_CHECK_ENDPOINT - default to **http://app:8080/version**
+- DISK_PATH - mountpoint reported as node disk usage, default to **/** (**\\** on windows)
 - DEBUG_EVENT - default to **false**
 - DEBUG_STATS - default to **false**
 

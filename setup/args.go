@@ -14,6 +14,7 @@ type args struct {
 	StatsFrequency      int    `json:"stats_frequency"`
 	EventEndpoint       string `json:"event_endpoint"`
 	HealthCheckEndpoint string `json:"healthcheck_endpoint"`
+	DiskPath            string `json:"disk_path"`
 	Debug               debug  `json:"debug"`
 }
 
@@ -22,6 +23,7 @@ func GetArgs() *args {
 		StatsFrequency:      getIntValue(30, "STATS_FREQUENCY"),
 		EventEndpoint:       getStringValue("http://app:8080/events", "EVENT_ENDPOINT"),
 		HealthCheckEndpoint: getStringValue("http://app:8080/version", "HEALTH_CHECK_ENDPOINT"),
+		DiskPath:            getStringValue("", "DISK_PATH"),
 		Debug: debug{
 			Event: getBooleanValue(false, "DEBUG_EVENT"),
 			Stats: getBooleanValue(false, "DEBUG_STATS")},

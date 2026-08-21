@@ -63,9 +63,20 @@ func getPath() string {
 	return "/"
 }
 
+// diskPath is the mountpoint reported as the node's disk usage. defaults to the
+// platform root, override with DISK_PATH when data lives on another partition.
+func diskPath() string {
+	if arg.DiskPath != "" {
+		return arg.DiskPath
+	}
+	return getPath()
+}
+
 func DiskUsage() (ds DiskStatus) {
-	diskStat, err := disk.Usage(getPath())
+	path := diskPath()
+	diskStat, err := disk.Usage(path)
 	if err != nil {
+		log.Printf("ERROR: Disk usage fetching failed for %s: %s\n", path, err)
 		return
 	}
 

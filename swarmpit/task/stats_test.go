@@ -120,3 +120,49 @@ func TestContainersUsageSurvivesABadContainer(t *testing.T) {
 		t.Fatalf("expected container aaa, got %+v", got[0])
 	}
 }
+
+// DISK_PATH lets a node report the partition its data actually lives on
+// instead of always reporting root. See swarmpit/agent#5.
+func TestDiskPathDefaultsToPlatformRoot(t *testing.T) {
+	original := arg.DiskPath
+	defer func() { arg.DiskPath = original }()
+
+	arg.DiskPath = ""
+	if got := diskPath(); got != getPath() {
+		t.Fatalf("expected the platform root %q, got %q", getPath(), got)
+	}
+}
+
+func TestDiskPathHonoursOverride(t *testing.T) {
+	original := arg.DiskPath
+	defer func() { arg.DiskPath = original }()
+
+	arg.DiskPath = "/mnt/data"
+	if got := diskPath(); got != "/mnt/data" {
+		t.Fatalf("expected /mnt/data, got %q", got)
+	}
+}
+
+func TestDiskUsageReportsTheConfiguredPath(t *testing.T) {
+	original := arg.DiskPath
+	defer func() { arg.DiskPath = original }()
+
+	arg.DiskPath = "/"
+	root := DiskUsage()
+	if root.Total == 0 {
+		t.Fatal("expected a non-zero total for /")
+	}
+	if root.Used+root.Free > root.Total*2 {
+		t.Fatalf("implausible usage figures: %+v", root)
+	}
+}
+
+func TestDiskUsageOnMissingPathIsZeroNotPanic(t *testing.T) {
+	original := arg.DiskPath
+	defer func() { arg.DiskPath = original }()
+
+	arg.DiskPath = "/definitely/not/a/mountpoint"
+	if got := DiskUsage(); got != (DiskStatus{}) {
+		t.Fatalf("expected a zero status for a bad path, got %+v", got)
+	}
+}
