@@ -1,0 +1,38 @@
+name: Test & Build
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+  workflow_dispatch:
+
+jobs:
+  go:
+    name: Test & Build Go
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      # toolchain comes from the image the Dockerfile builds with, so ci can't
+      # drift from the release build
+      - name: vet, test & build
+        run: |
+          docker run --rm -v "$PWD":/build -w /build -e CGO_ENABLED=0 golang:1.12 \
+            sh -c 'go vet ./... && go test ./... && go build -o agent .'
+
+  docker:
+    name: Build docker
+    needs: go
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      # same arch matrix deploy-image.sh releases; go cross-compiles so no
+      # emulation is needed
+      - name: build release architectures
+        run: |
+          docker build --build-arg GOARCH=amd64 -t agent:amd64 .
+          docker build --build-arg GOARCH=arm64 -t agent:arm64 .
+          docker build --build-arg GOARCH=arm --build-arg GOARM=7 -t agent:armv7 .
+          docker build --build-arg GOARCH=arm --build-arg GOARM=6 -t agent:armv6 .
