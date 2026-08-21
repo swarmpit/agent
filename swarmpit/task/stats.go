@@ -3,7 +3,6 @@ package task
 import (
 	"context"
 	"encoding/json"
-	"io"
 	"log"
 	"runtime"
 	"sync"
@@ -121,7 +120,15 @@ func ContainersUsage(cli *client.Client) (stats []ContainerStatus) {
 	for _, v := range resp {
 		go func(v types.Container) {
 			defer wg.Done()
-			var stat = ContainerUsage(cli, v.ID)
+			defer func() {
+				if r := recover(); r != nil {
+					log.Printf("ERROR: Statistics collection failed for %s: %v\n", v.ID, r)
+				}
+			}()
+			stat, ok := ContainerUsage(cli, v.ID)
+			if !ok {
+				return
+			}
 			mux.Lock()
 			stats = append(stats, stat)
 			mux.Unlock()
@@ -132,7 +139,7 @@ func ContainersUsage(cli *client.Client) (stats []ContainerStatus) {
 	return
 }
 
-func ContainerUsage(cli *client.Client, id string) (status ContainerStatus) {
+func ContainerUsage(cli *client.Client, id string) (status ContainerStatus, ok bool) {
 	resp, err := cli.ContainerStats(context.Background(), id, false)
 	if err != nil {
 		log.Printf("ERROR: Statistics fetching failed: %s\n", err)
@@ -147,9 +154,12 @@ func ContainerUsage(cli *client.Client, id string) (status ContainerStatus) {
 	)
 
 	defer resp.Body.Close()
-	dec := json.NewDecoder(resp.Body)
-	if err := dec.Decode(&v); err != nil {
-		dec = json.NewDecoder(io.MultiReader(dec.Buffered(), resp.Body))
+	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+		log.Printf("ERROR: Statistics decoding failed for %s: %s\n", id, err)
+		return
+	}
+	if v == nil {
+		return
 	}
 
 	var daemonOSType = resp.OSType
@@ -171,6 +181,7 @@ func ContainerUsage(cli *client.Client, id string) (status ContainerStatus) {
 	status.Memory = memory
 	status.MemoryLimit = memoryLimit
 	status.MemoryPercentage = memoryPercent
+	ok = true
 	return
 }
 
