@@ -159,6 +159,7 @@ func ContainerUsage(cli *client.Client, id string) (status ContainerStatus, ok b
 		return
 	}
 	if v == nil {
+		log.Printf("ERROR: Container stats data is nil for container %s\n", id)
 		return
 	}
 
